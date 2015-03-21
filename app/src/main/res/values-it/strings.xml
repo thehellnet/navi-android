@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Navi</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="ui_infos_desc">Descrizione</string>
+    <string name="ui_infos_user">Nome utente</string>
+    <string name="ui_position_lastprovider">Ultimo provider</string>
+    <string name="ui_position_latitude">Latitudine</string>
+    <string name="ui_position_longitude">Longitudine</string>
+    <string name="ui_service_switch">Abilita servizio invio</string>
+    <string name="ui_position_lastprovider_gps">GPS</string>
+    <string name="ui_position_lastprovider_network">Rete mobile</string>
+    <string name="settings_save">Salva</string>
+    <string name="settings_title">Impostazioni</string>
+</resources>

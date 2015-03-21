@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="infos_table">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">13dp</item>
+    </style>
+    <style name="infos_row">
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingBottom">1dp</item>
+    </style>
+    <style name="infos_item_param">
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:layout_column">1</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+    <style name="infos_item_value">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:layout_column">2</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+</resources>

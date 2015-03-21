@@ -1,11 +1,141 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/scrollView">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-</RelativeLayout>
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            style="@style/position_table">
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/position_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_param"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/ui_position_latitude"
+                    android:id="@+id/latitudeLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_value"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text=""
+                    android:id="@+id/latitudeText" />
+            </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/position_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_param"
+                    android:text="@string/ui_position_longitude"
+                    android:id="@+id/longitudeLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_value"
+                    android:text=""
+                    android:id="@+id/longitudeText" />
+            </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/position_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_param"
+                    android:text="Last provider"
+                    android:id="@+id/lastProviderLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_value"
+                    android:text=""
+                    android:id="@+id/lastProviderText" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            style="@style/infos_table">
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/infos_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/infos_item_param"
+                    android:text="@string/ui_infos_user"
+                    android:id="@+id/usernameLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/infos_item_value"
+                    android:text=""
+                    android:id="@+id/usernameText" />
+            </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/infos_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/infos_item_param"
+                    android:text="@string/ui_infos_desc"
+                    android:id="@+id/descriptionLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/infos_item_value"
+                    android:text=""
+                    android:id="@+id/descriptionText" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            style="@style/service_container"
+            android:layout_gravity="center_horizontal">
+            <Switch
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ui_service_switch"
+                style="@style/service_switch"
+                android:id="@+id/serviceSwitch"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
