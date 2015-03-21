@@ -1,18 +1,21 @@
 package org.thehellnet.mobile.navi.service;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 
-public class PositionService extends IntentService {
+import org.thehellnet.mobile.navi.R;
+
+public class PositionService extends Service {
     private static final String TAG = PositionService.class.getName();
 
-    private final LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    private LocationManager locationManager;
     private LocationListener networkListener;
     private LocationListener gpsListener;
 
@@ -21,8 +24,6 @@ public class PositionService extends IntentService {
     private Location gpsLocation;
 
     public PositionService() {
-        super(TAG);
-
         alreadyStarted = false;
 
         networkListener = new LocationListener() {
@@ -65,12 +66,30 @@ public class PositionService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onCreate() {
+        super.onCreate();
+
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Service called");
 
-        boolean status = intent.getBooleanExtra("status", false);
-
+        boolean status = intent.getBooleanExtra(getString(R.string.intent_servicelaunch_status), false);
         enableListeners(status);
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     private void enableListeners(boolean status) {
@@ -81,11 +100,14 @@ public class PositionService extends IntentService {
         alreadyStarted = status;
 
         if(alreadyStarted) {
+            Log.d(TAG, "Starting position listeners");
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networkListener);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
         } else {
+            Log.d(TAG, "Stopping thread");
             locationManager.removeUpdates(networkListener);
             locationManager.removeUpdates(gpsListener);
+            stopSelf();
         }
     }
 
@@ -104,7 +126,11 @@ public class PositionService extends IntentService {
             return;
         }
 
-        if(gpsLocation.getAccuracy() >= networkLocation.getAccuracy()) {
+        Log.d(TAG, String.format("Accuracy -> GPS: %f - NETWORK: %f",
+                gpsLocation.getAccuracy(),
+                networkLocation.getAccuracy()));
+
+        if(gpsLocation.getAccuracy() <= networkLocation.getAccuracy()) {
             launchUpdate(gpsLocation, "gps");
         } else {
             launchUpdate(networkLocation, "network");
@@ -123,9 +149,9 @@ public class PositionService extends IntentService {
     }
 
     private void sendIntent(Location location, String type) {
-        Intent intent = new Intent("org.thehellnet.mobile.navi.intents.UPDATE_LOCATION");
-        intent.putExtra("type", type);
-        intent.putExtra("location", location);
+        Intent intent = new Intent(getString(R.string.intent_update));
+        intent.putExtra(getString(R.string.intent_update_location), location);
+        intent.putExtra(getString(R.string.intent_update_type), type);
         getApplicationContext().sendBroadcast(intent);
     }
 }
