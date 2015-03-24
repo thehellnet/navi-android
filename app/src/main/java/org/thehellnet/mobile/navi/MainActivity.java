@@ -14,11 +14,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.thehellnet.mobile.navi.config.C;
-import org.thehellnet.mobile.navi.service.PositionData;
 import org.thehellnet.mobile.navi.service.PositionService;
+import org.thehellnet.mobile.navi.service.UpdateUiData;
 
 public class MainActivity extends ActionBarActivity {
     private SharedPreferences sharedPreferences;
@@ -28,9 +27,9 @@ public class MainActivity extends ActionBarActivity {
     private class UpdateUiPing extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            PositionData positionData = (PositionData) intent.getSerializableExtra("data");
+            UpdateUiData updateUiData = (UpdateUiData) intent.getSerializableExtra("data");
 
-            updateUi(positionData);
+            updateUi(updateUiData);
         }
     }
 
@@ -122,11 +121,11 @@ public class MainActivity extends ActionBarActivity {
         descriptionText.setText(sharedPreferences.getString(C.config.DESCRIPTION, ""));
     }
 
-    private void updateUi(PositionData positionData) {
-        double latitude = positionData.getLatitude();
-        double longitude = positionData.getLongitude();
-        String type = positionData.getType();
-        float accuracy = positionData.getAccuracy();
+    private void updateUi(UpdateUiData updateUiData) {
+        double latitude = updateUiData.getLatitude();
+        double longitude = updateUiData.getLongitude();
+        String type = updateUiData.getType();
+        float accuracy = updateUiData.getAccuracy();
 
         TextView latitudeText = (TextView) findViewById(R.id.latitudeText);
         String latitudeLetter = "N";
@@ -145,12 +144,16 @@ public class MainActivity extends ActionBarActivity {
         longitudeText.setText(String.format("%.07f deg %s", longitude, longitudeLetter));
 
         TextView lastProviderText = (TextView) findViewById(R.id.lastProviderText);
-        if (type.equals(LocationManager.GPS_PROVIDER)) {
-            lastProviderText.setText(getString(R.string.ui_position_lastprovider_gps));
-        } else if (type.equals(LocationManager.NETWORK_PROVIDER)) {
-            lastProviderText.setText(getString(R.string.ui_position_lastprovider_network));
-        } else {
-            lastProviderText.setText("");
+        switch (type) {
+            case LocationManager.GPS_PROVIDER:
+                lastProviderText.setText(getString(R.string.ui_position_lastprovider_gps));
+                break;
+            case LocationManager.NETWORK_PROVIDER:
+                lastProviderText.setText(getString(R.string.ui_position_lastprovider_network));
+                break;
+            default:
+                lastProviderText.setText("");
+                break;
         }
 
         TextView accuracyText = (TextView) findViewById(R.id.accuracyText);
@@ -158,6 +161,20 @@ public class MainActivity extends ActionBarActivity {
 
         TextView dateTimeText = (TextView) findViewById(R.id.dateTimeText);
         dateTimeText.setText(DateTimeFormat.forPattern(getString(R.string.ui_position_datetime_tag))
-                .print(positionData.getDateTime()));
+                .print(updateUiData.getDateTime()));
+
+        TextView queueSizeText = (TextView) findViewById(R.id.queueSizeText);
+        String points = getString(R.string.ui_server_queuesize_manypoints);
+        if (updateUiData.getQueueSize() == 1) {
+            points = getString(R.string.ui_server_queuesize_onepoint);
+        }
+        queueSizeText.setText(String.format("%d %s", updateUiData.getQueueSize(), points));
+
+        TextView connectedText = (TextView) findViewById(R.id.connectedText);
+        String connected = getString(R.string.ui_server_connected_offline);
+        if (updateUiData.isServerConnected()) {
+            connected = getString(R.string.ui_server_connected_online);
+        }
+        connectedText.setText(connected);
     }
 }

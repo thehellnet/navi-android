@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by sardylan on 23/03/15.
  */
-public class PositionData implements Serializable {
+public class UpdateUiData implements Serializable {
     private double latitude;
     private double longitude;
     private float accuracy;
@@ -17,6 +17,7 @@ public class PositionData implements Serializable {
     private int countGps;
     private int countSent;
     private int queueSize;
+    private boolean isServerConnected;
 
     public int getQueueSize() {
         return queueSize;
@@ -88,5 +89,13 @@ public class PositionData implements Serializable {
 
     public void setDateTime(DateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public boolean isServerConnected() {
+        return isServerConnected;
+    }
+
+    public void setServerConnected(boolean isServerConnected) {
+        this.isServerConnected = isServerConnected;
     }
 }

@@ -1,6 +1,5 @@
 package org.thehellnet.mobile.navi.service;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +16,11 @@ import android.widget.Toast;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.thehellnet.java.socket.HellSocket;
-import org.thehellnet.mobile.navi.R;
 import org.thehellnet.mobile.navi.config.C;
+import org.thehellnet.mobile.navi.config.P;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class PositionService extends Service {
     private static final String TAG = PositionService.class.getName();
@@ -38,6 +38,7 @@ public class PositionService extends Service {
     private int countPositionsSent = 0;
 
     private static final HellSocket socket = new HellSocket(C.server.HOST, C.server.PORT);
+    private LinkedList<String> queue;
 
     @Override
     public void onCreate() {
@@ -96,6 +97,8 @@ public class PositionService extends Service {
                 updateLocation();
             }
         };
+
+        queue = new LinkedList<>();
     }
 
     @Override
@@ -143,7 +146,7 @@ public class PositionService extends Service {
             locationManager.removeUpdates(networkListener);
             locationManager.removeUpdates(gpsListener);
 
-            stopSelf();
+            queue.clear();
 
             try {
                 socket.disconnect();
@@ -152,6 +155,8 @@ public class PositionService extends Service {
             }
 
             Toast.makeText(this, "Position Service stop", Toast.LENGTH_LONG).show();
+
+            stopSelf();
         }
     }
 
@@ -187,7 +192,7 @@ public class PositionService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                sendDataToSocket(location, type);
+                addDataToQueue(location, type);
             }
         }).start();
 
@@ -199,15 +204,7 @@ public class PositionService extends Service {
         }).start();
     }
 
-    private void sendDataToSocket(Location location, String type) {
-        if (!socket.isConnected()) {
-            try {
-                socket.connect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+    public void addDataToQueue(Location location, String type) {
         SharedPreferences sharedPreferences = getSharedPreferences(C.config.PREFERENCES_NAME, MODE_PRIVATE);
 
         String payload = String.format("%s|%s|%s|%s|%.07f|%.07f|%.01f\n",
@@ -219,24 +216,49 @@ public class PositionService extends Service {
                 location.getLongitude(),
                 location.getAccuracy());
 
-        socket.send(payload);
+        queue.add(payload);
+        sendQueue();
+    }
+
+    private void sendQueue() {
+        if (!socket.isConnected()) {
+            try {
+                socket.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            String item = queue.peek();
+            socket.send(P.server.ITEM + item);
+
+            String response = socket.recv();
+            if (!response.equals(P.server.ACK)) {
+                Log.d(TAG, "Server not ACK");
+                break;
+            }
+
+            queue.remove();
+        }
     }
 
     private void sendIntent(Location location, String type) {
-        PositionData positionData = new PositionData();
+        UpdateUiData updateUiData = new UpdateUiData();
 
-        positionData.setLatitude(location.getLatitude());
-        positionData.setLongitude(location.getLongitude());
-        positionData.setAccuracy(location.getAccuracy());
-        positionData.setDateTime(new DateTime(location.getTime()));
-        positionData.setType(type);
-        positionData.setCountNetwork(countPositionsNetwork);
-        positionData.setCountGps(countPositionsGps);
-        positionData.setCountSent(countPositionsSent);
-        positionData.setQueueSize(0);
+        updateUiData.setLatitude(location.getLatitude());
+        updateUiData.setLongitude(location.getLongitude());
+        updateUiData.setAccuracy(location.getAccuracy());
+        updateUiData.setDateTime(new DateTime(location.getTime()));
+        updateUiData.setType(type);
+        updateUiData.setCountNetwork(countPositionsNetwork);
+        updateUiData.setCountGps(countPositionsGps);
+        updateUiData.setCountSent(countPositionsSent);
+        updateUiData.setQueueSize(queue.size());
+        updateUiData.setServerConnected(socket.isConnected());
 
         Intent intent = new Intent(C.intent.UPDATE_LOCATION);
-        intent.putExtra("data", positionData);
+        intent.putExtra("data", updateUiData);
         getApplicationContext().sendBroadcast(intent);
     }
 }

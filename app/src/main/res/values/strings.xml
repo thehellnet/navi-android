@@ -12,6 +12,13 @@
     <string name="ui_position_datetime">Date and Time</string>
     <string name="ui_position_datetime_tag">yyyy-MM-dd HH:mm:ss</string>
 
+    <string name="ui_server_queuesize">Queue size</string>
+    <string name="ui_server_queuesize_manypoints">points</string>
+    <string name="ui_server_queuesize_onepoint">point</string>
+    <string name="ui_server_connected">Server</string>
+    <string name="ui_server_connected_offline">Offline</string>
+    <string name="ui_server_connected_online">Online</string>
+
     <string name="ui_infos_user">User name</string>
     <string name="ui_infos_desc">Description</string>
 

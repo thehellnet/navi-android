@@ -44,15 +44,30 @@ public class HellSocket {
     }
 
     public void send(String message) {
-        if (message == null || message.length() == 0)
+        if (out == null || !socket.isConnected()) {
             return;
+        }
+        if (message == null || message.length() == 0) {
+            return;
+        }
 
         out.write(message);
         out.flush();
     }
 
-    public String recv() throws IOException {
-        String message = in.readLine();
+    public String recv() {
+        if(in == null || !socket.isConnected()) {
+            return "";
+        }
+
+        String message = "";
+
+        try {
+            message = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return message.trim();
     }
 

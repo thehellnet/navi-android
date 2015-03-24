@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:padding="2dp"
             style="@style/position_table">
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -39,6 +40,7 @@
                     android:text=""
                     android:id="@+id/latitudeText" />
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -58,6 +60,7 @@
                     android:text=""
                     android:id="@+id/longitudeText" />
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -77,6 +80,7 @@
                     android:text=""
                     android:id="@+id/lastProviderText" />
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -96,6 +100,7 @@
                     android:text=""
                     android:id="@+id/accuracyText" />
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -119,8 +124,56 @@
 
         <TableLayout
             android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            style="@style/position_table">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/position_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_param"
+                    android:text="@string/ui_server_queuesize"
+                    android:id="@+id/queueSizeLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_value"
+                    android:text=""
+                    android:id="@+id/queueSizeText" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/position_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_param"
+                    android:text="@string/ui_server_connected"
+                    android:id="@+id/connectedLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_value"
+                    android:text=""
+                    android:id="@+id/connectedText" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             style="@style/infos_table">
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -140,6 +193,7 @@
                     android:text=""
                     android:id="@+id/usernameText" />
             </TableRow>
+
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -167,6 +221,7 @@
             android:layout_height="fill_parent"
             style="@style/service_container"
             android:layout_gravity="center_horizontal">
+
             <Switch
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
