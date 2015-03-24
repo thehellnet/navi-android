@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="preferences_username" translatable="false">username</string>
-    <string name="preferences_description" translatable="false">description</string>
-</resources>

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.thehellnet.mobile.navi.config.C;
+
 public class SettingsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +21,10 @@ public class SettingsActivity extends ActionBarActivity {
         super.onResume();
 
         TextView usernameText = (TextView) findViewById(R.id.usernameText);
-        usernameText.setText(getIntent().getStringExtra(getString(R.string.preferences_username)));
+        usernameText.setText(getIntent().getStringExtra(C.config.USERNAME));
 
         TextView descriptionText = (TextView) findViewById(R.id.descriptionText);
-        descriptionText.setText(getIntent().getStringExtra(getString(R.string.preferences_description)));
+        descriptionText.setText(getIntent().getStringExtra(C.config.DESCRIPTION));
 
         Button saveButton = (Button) findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -45,10 +47,10 @@ public class SettingsActivity extends ActionBarActivity {
 
         if(doSave) {
             TextView usernameText = (TextView) findViewById(R.id.usernameText);
-            returnIntent.putExtra(getString(R.string.preferences_username), usernameText.getText().toString());
+            returnIntent.putExtra(C.config.USERNAME, usernameText.getText().toString());
 
             TextView descriptionText = (TextView) findViewById(R.id.descriptionText);
-            returnIntent.putExtra(getString(R.string.preferences_description), descriptionText.getText().toString());
+            returnIntent.putExtra(C.config.DESCRIPTION, descriptionText.getText().toString());
 
             result = RESULT_OK;
         }

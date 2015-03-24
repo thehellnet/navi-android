@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="intent_update">org.thehellnet.mobile.navi.intents.UPDATE_LOCATION</string>
-    <string name="intent_update_location">location</string>
-    <string name="intent_update_type">type</string>
-
-    <string name="intent_servicelaunch_status">status</string>
-</resources>

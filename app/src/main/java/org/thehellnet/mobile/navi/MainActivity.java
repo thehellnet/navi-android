@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -14,6 +14,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.thehellnet.mobile.navi.config.C;
+import org.thehellnet.mobile.navi.service.PositionData;
 import org.thehellnet.mobile.navi.service.PositionService;
 
 public class MainActivity extends ActionBarActivity {
@@ -21,18 +23,12 @@ public class MainActivity extends ActionBarActivity {
 
     private UpdateUiPing updateUiPing;
 
-    private class UpdateUiPing extends BroadcastReceiver
-    {
+    private class UpdateUiPing extends BroadcastReceiver {
         @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            Location location = intent.getParcelableExtra(getString(R.string.intent_update_location));
-            String type = intent.getStringExtra(getString(R.string.intent_update_type));
+        public void onReceive(Context context, Intent intent) {
+            PositionData positionData = (PositionData) intent.getSerializableExtra("data");
 
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-
-            updateUi(latitude, longitude, type);
+            updateUi(positionData);
         }
     }
 
@@ -41,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPreferences = getPreferences(MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(C.config.PREFERENCES_NAME, MODE_PRIVATE);
     }
 
     @Override
@@ -60,10 +56,8 @@ public class MainActivity extends ActionBarActivity {
 
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
-            intent.putExtra(getString(R.string.preferences_username),
-                    sharedPreferences.getString(getString(R.string.preferences_username), ""));
-            intent.putExtra(getString(R.string.preferences_description),
-                    sharedPreferences.getString(getString(R.string.preferences_description), ""));
+            intent.putExtra(C.config.USERNAME, sharedPreferences.getString(C.config.USERNAME, ""));
+            intent.putExtra(C.config.DESCRIPTION, sharedPreferences.getString(C.config.DESCRIPTION, ""));
             startActivityForResult(intent, 1);
 
             return true;
@@ -78,14 +72,14 @@ public class MainActivity extends ActionBarActivity {
         updateUiFromConfig();
 
         updateUiPing = new UpdateUiPing();
-        registerReceiver(updateUiPing, new IntentFilter(getString(R.string.intent_update)));
+        registerReceiver(updateUiPing, new IntentFilter(C.intent.UPDATE_LOCATION));
 
         Switch serviceSwitch = (Switch) findViewById(R.id.serviceSwitch);
         serviceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 Intent intent = new Intent(getApplicationContext(), PositionService.class);
-                intent.putExtra(getString(R.string.intent_servicelaunch_status), isChecked);
+                intent.putExtra("status", isChecked);
                 startService(intent);
             }
         });
@@ -105,14 +99,10 @@ public class MainActivity extends ActionBarActivity {
 
         switch (requestCode) {
             case 1:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     SharedPreferences.Editor edit = sharedPreferences.edit();
-
-                    edit.putString(getString(R.string.preferences_username),
-                            data.getStringExtra(getString(R.string.preferences_username)));
-                    edit.putString(getString(R.string.preferences_description),
-                            data.getStringExtra(getString(R.string.preferences_description)));
-
+                    edit.putString(C.config.USERNAME, data.getStringExtra(C.config.USERNAME));
+                    edit.putString(C.config.DESCRIPTION, data.getStringExtra(C.config.DESCRIPTION));
                     edit.commit();
 
                     updateUiFromConfig();
@@ -124,24 +114,44 @@ public class MainActivity extends ActionBarActivity {
 
     private void updateUiFromConfig() {
         TextView usernameText = (TextView) findViewById(R.id.usernameText);
-        usernameText.setText(sharedPreferences.getString(getString(R.string.preferences_username), ""));
+        usernameText.setText(sharedPreferences.getString(C.config.USERNAME, ""));
 
         TextView descriptionText = (TextView) findViewById(R.id.descriptionText);
-        descriptionText.setText(sharedPreferences.getString(getString(R.string.preferences_description), ""));
+        descriptionText.setText(sharedPreferences.getString(C.config.DESCRIPTION, ""));
     }
 
-    private void updateUi(double latitude, double longitude, String type) {
+    private void updateUi(PositionData positionData) {
+        double latitude = positionData.getLatitude();
+        double longitude = positionData.getLongitude();
+        String type = positionData.getType();
+        float accuracy = positionData.getAccuracy();
+
         TextView latitudeText = (TextView) findViewById(R.id.latitudeText);
-        latitudeText.setText(String.format("%.06f", latitude));
+        String latitudeLetter = "N";
+        if (latitude < 0) {
+            latitude *= -1;
+            latitudeLetter = "S";
+        }
+        latitudeText.setText(String.format("%.08f deg %s", latitude, latitudeLetter));
 
         TextView longitudeText = (TextView) findViewById(R.id.longitudeText);
-        longitudeText.setText(String.format("%.06f", longitude));
+        String longitudeLetter = "E";
+        if (longitude < 0) {
+            longitude *= -1;
+            longitudeLetter = "W";
+        }
+        longitudeText.setText(String.format("%.08f deg %s", longitude, longitudeLetter));
 
         TextView lastProviderText = (TextView) findViewById(R.id.lastProviderText);
-        if(type.equals("gps")) {
+        if (type.equals(LocationManager.GPS_PROVIDER)) {
             lastProviderText.setText(getString(R.string.ui_position_lastprovider_gps));
-        } else if(type.equals("network")) {
+        } else if (type.equals(LocationManager.NETWORK_PROVIDER)) {
             lastProviderText.setText(getString(R.string.ui_position_lastprovider_network));
+        } else {
+            lastProviderText.setText("");
         }
+
+        TextView accuracyText = (TextView) findViewById(R.id.accuracyText);
+        accuracyText.setText(String.format("%.02f m", accuracy));
     }
 }

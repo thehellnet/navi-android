@@ -10,7 +10,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="1">
 
         <TableLayout
             android:layout_width="fill_parent"
@@ -66,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/position_item_param"
-                    android:text="Last provider"
+                    android:text="@string/ui_position_lastprovider"
                     android:id="@+id/lastProviderLabel" />
 
                 <TextView
@@ -75,6 +76,25 @@
                     style="@style/position_item_value"
                     android:text=""
                     android:id="@+id/lastProviderText" />
+            </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/position_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_param"
+                    android:text="@string/ui_position_accuracy"
+                    android:id="@+id/accuracyLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_value"
+                    android:text=""
+                    android:id="@+id/accuracyText" />
             </TableRow>
         </TableLayout>
 
@@ -136,6 +156,5 @@
                 android:id="@+id/serviceSwitch"
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
