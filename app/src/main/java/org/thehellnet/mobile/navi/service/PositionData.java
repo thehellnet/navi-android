@@ -1,5 +1,7 @@
 package org.thehellnet.mobile.navi.service;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 
 /**
@@ -9,6 +11,7 @@ public class PositionData implements Serializable {
     private double latitude;
     private double longitude;
     private float accuracy;
+    private DateTime dateTime;
     private String type;
     private int countNetwork;
     private int countGps;
@@ -77,5 +80,13 @@ public class PositionData implements Serializable {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public DateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(DateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }

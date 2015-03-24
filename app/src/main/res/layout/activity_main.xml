@@ -96,6 +96,25 @@
                     android:text=""
                     android:id="@+id/accuracyText" />
             </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                style="@style/position_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_param"
+                    android:text="@string/ui_position_datetime"
+                    android:id="@+id/dateTimeLabel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/position_item_value"
+                    android:text=""
+                    android:id="@+id/dateTimeText" />
+            </TableRow>
         </TableLayout>
 
         <TableLayout

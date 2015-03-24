@@ -12,4 +12,7 @@
     <string name="ui_position_lastprovider_network">Rete mobile</string>
     <string name="settings_save">Salva</string>
     <string name="settings_title">Impostazioni</string>
+    <string name="ui_position_accuracy">Precisione</string>
+    <string name="ui_position_datetime">Data e Ora</string>
+    <string name="ui_position_datetime_tag">dd-MM-yyyy HH:mm:ss</string>
 </resources>

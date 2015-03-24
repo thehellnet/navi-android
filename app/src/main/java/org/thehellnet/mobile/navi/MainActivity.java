@@ -14,6 +14,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.thehellnet.mobile.navi.config.C;
 import org.thehellnet.mobile.navi.service.PositionData;
 import org.thehellnet.mobile.navi.service.PositionService;
@@ -132,7 +134,7 @@ public class MainActivity extends ActionBarActivity {
             latitude *= -1;
             latitudeLetter = "S";
         }
-        latitudeText.setText(String.format("%.08f deg %s", latitude, latitudeLetter));
+        latitudeText.setText(String.format("%.07f deg %s", latitude, latitudeLetter));
 
         TextView longitudeText = (TextView) findViewById(R.id.longitudeText);
         String longitudeLetter = "E";
@@ -140,7 +142,7 @@ public class MainActivity extends ActionBarActivity {
             longitude *= -1;
             longitudeLetter = "W";
         }
-        longitudeText.setText(String.format("%.08f deg %s", longitude, longitudeLetter));
+        longitudeText.setText(String.format("%.07f deg %s", longitude, longitudeLetter));
 
         TextView lastProviderText = (TextView) findViewById(R.id.lastProviderText);
         if (type.equals(LocationManager.GPS_PROVIDER)) {
@@ -152,6 +154,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         TextView accuracyText = (TextView) findViewById(R.id.accuracyText);
-        accuracyText.setText(String.format("%.02f m", accuracy));
+        accuracyText.setText(String.format("%.01f m", accuracy));
+
+        TextView dateTimeText = (TextView) findViewById(R.id.dateTimeText);
+        dateTimeText.setText(DateTimeFormat.forPattern(getString(R.string.ui_position_datetime_tag))
+                .print(positionData.getDateTime()));
     }
 }

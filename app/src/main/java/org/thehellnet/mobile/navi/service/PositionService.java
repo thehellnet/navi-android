@@ -210,8 +210,8 @@ public class PositionService extends Service {
 
         SharedPreferences sharedPreferences = getSharedPreferences(C.config.PREFERENCES_NAME, MODE_PRIVATE);
 
-        String payload = String.format("%s|%s|%s|%s|%.06f|%.06f|%.04f\n",
-                DateTimeFormat.forPattern("yyyyMMddHHmmss").print(new DateTime()),
+        String payload = String.format("%s|%s|%s|%s|%.07f|%.07f|%.01f\n",
+                DateTimeFormat.forPattern("yyyyMMddHHmmss").print(new DateTime(location.getTime())),
                 sharedPreferences.getString(C.config.USERNAME, ""),
                 Base64.encodeToString(sharedPreferences.getString(C.config.DESCRIPTION, "").getBytes(), Base64.URL_SAFE | Base64.NO_WRAP),
                 type,
@@ -228,6 +228,7 @@ public class PositionService extends Service {
         positionData.setLatitude(location.getLatitude());
         positionData.setLongitude(location.getLongitude());
         positionData.setAccuracy(location.getAccuracy());
+        positionData.setDateTime(new DateTime(location.getTime()));
         positionData.setType(type);
         positionData.setCountNetwork(countPositionsNetwork);
         positionData.setCountGps(countPositionsGps);
